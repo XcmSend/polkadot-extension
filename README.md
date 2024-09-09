@@ -16,6 +16,7 @@ https://github.com/XcmSend/polkadot-extension/issues/5
 
 ### Tested on firefox: 
   -  version: Mozilla Firefox (115.13.0)
+  -  Firefox precompiled browser extension: https://github.com/XcmSend/polkadot-extension/issues/5#issuecomment-2338117887  
 
 
 # polkadot{.js} extension
