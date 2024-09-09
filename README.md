@@ -1,3 +1,22 @@
+## Forked version of Polkadot.js extension with support for blinks
+
+convert your links to blinks: 
+```
+polkadotlink://QmPLVqWgEoNBjyTPBKw5prq6uuU1id2Wr39QWmpmyafEpF ipfs test // $ polkadotlink://QmRUxiaLQj8MtZeM6uiLiRMR3fyLeFcMzSrCq8NGtPPzZW
+```
+
+##### Note:
+Use node version `v20.17.0` when building.   
+
+
+
+## Docs:
+https://github.com/XcmSend/polkadot-extension/issues/5 
+
+
+### Tested on firefox: 
+
+
 # polkadot{.js} extension
 
 A very simple scaffolding browser extension that injects a [@polkadot/api](https://github.com/polkadot-js/api) Signer into a page, along with any associated accounts, allowing for use by any dapp. This is an extensible POC implementation of a Polkadot/Substrate browser signer.
