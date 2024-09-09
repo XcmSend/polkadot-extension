@@ -38,12 +38,15 @@ export function download_metadata(link_token: string) {
 }
 
 
-export function html_base(logo: string, title: string){ //inputen: string
-    const image = `<img src="${logo}">`;
-    const full_body = `<div>
+export function html_base(logo: string, title: string, button_text: string){ //inputen: string
+    const image = `<img title="${title}" src="${logo}">`;
+    const full_body = `<span>
 ${image}<br>
 <h4>${title}</h4>
-    </div>`;
+    
+<button class="flex w-full items-center justify-center text-nowrap rounded-button px-4 py-3 text-text font-semibold transition-colors motion-reduce:transition-none bg-button text-text-button hover:bg-button-hover"><input placeholder="${title}" required="" class="flex-1 truncate bg-input-bg text-text-input outline-none placeholder:text-text-input-placeholder disabled:text-text-input-disabled" type="number" value="">
+    <span class="min-w-0 truncate">${button_text}</span></button>
+</span>`;
 
 
     return full_body;

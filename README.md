@@ -1,5 +1,21 @@
-## Docs:
+# Forked version of Polkadot.js extension with support for blinks
+
+convert your links to blinks: 
+```
+polkadotlink://QmPLVqWgEoNBjyTPBKw5prq6uuU1id2Wr39QWmpmyafEpF ipfs test // $ polkadotlink://QmRUxiaLQj8MtZeM6uiLiRMR3fyLeFcMzSrCq8NGtPPzZW
+```
+
+##### Note:
+Use node version `v20.17.0` when building.   
+
+## WIP Docs:
 https://github.com/XcmSend/polkadot-extension/issues/5 
+
+
+
+
+### Tested on firefox: 
+  -  version: Mozilla Firefox (115.13.0)
 
 
 # polkadot{.js} extension
