@@ -1,4 +1,5 @@
-# Forked version of Polkadot.js extension with support for blinks
+# Blinks for Polkadot
+(Forked version of Polkadot.js extension with support for blinks)
 
 ## Detection, Fetching, and Injection: 
 
