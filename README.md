@@ -1,9 +1,24 @@
 # Forked version of Polkadot.js extension with support for blinks
 
-convert your links to blinks: 
-```
-polkadotlink://QmPLVqWgEoNBjyTPBKw5prq6uuU1id2Wr39QWmpmyafEpF ipfs test // $ polkadotlink://QmRUxiaLQj8MtZeM6uiLiRMR3fyLeFcMzSrCq8NGtPPzZW
-```
+## Detection, Fetching, and Injection: 
+
+# Detection
+
+in `./packages/extension/src/blinks.ts` blinks are detected on the page. 
+
+## Fetching and Injections
+
+After detection, the are two approaches: using an iFrame to inject the app, or injected the app directly from the extension. Currently the iFrame approach is activated. 
+
+# iFrame Approach 
+## Fetching and Injecting with iFrame
+The on-chain metadata location, which is the blockNumber and txIndex (e.g. `blink.bagpipes.io/#/polkadot:7144107:2`), which is present in the URL is not actually fetched with this approach. Instead the iFrame is injected and replaces where the link sits in the webpage. And instead the URL (`blink.bagpipes.io/#/<chain>:<blockNumber>:<txIndex>` handles the fetching from the chain. 
+
+Changes from Polkadot-js extension:
+
+We added some content scripts, and we enabled iFrames to be injected. 
+
+
 
 ##### Note:
 Use node version `v20.17.0` when building.   
