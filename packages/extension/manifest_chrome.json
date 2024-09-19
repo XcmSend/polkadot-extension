@@ -5,7 +5,7 @@
   "name": "polkadot{.js} extension",
   "short_name": "polkadot{.js}",
   "manifest_version": 3,
-  "permissions": ["storage", "tabs"],
+"permissions": ["tabs", "storage", "activeTab", "scripting"],
   "background": {
     "service_worker": "background.js",
     "type": "module"
@@ -17,7 +17,8 @@
   "content_scripts": [{
     "js": ["content.js"],
     "matches": ["http://*/*", "https://*/*"],
-    "run_at": "document_start"
+    "run_at": "document_idle",
+    "all_frames": true
   }],
   "icons": {
     "16": "images/icon-16.png",
@@ -29,7 +30,10 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "page.js"
+        "page.js",
+        "blinks-app/*",
+        "blinks-app/assets/*.wasm",
+        "blinks-app/*.wasm"
       ],
       "matches": [
         "*://*/*"

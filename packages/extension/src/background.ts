@@ -15,7 +15,7 @@ import { AccountsStore } from '@polkadot/extension-base/stores';
 import { keyring } from '@polkadot/ui-keyring';
 import { assert } from '@polkadot/util';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
-import { replaceLinksInTextNodes } from './detectlinks';
+import { replaceLinksInTextNodes } from './blinks';
 
 
 

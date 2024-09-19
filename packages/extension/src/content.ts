@@ -6,10 +6,11 @@ import type { Message } from '@polkadot/extension-base/types';
 import { MESSAGE_ORIGIN_CONTENT, MESSAGE_ORIGIN_PAGE, PORT_CONTENT } from '@polkadot/extension-base/defaults';
 import { ensurePortConnection } from '@polkadot/extension-base/utils/portUtils';
 import { chrome } from '@polkadot/extension-inject/chrome';
-import { replaceLinksInTextNodes } from './detectlinks';
+import { replaceLinksInAnchors } from './blinks';
 
 
 let port: chrome.runtime.Port | undefined;
+console.log('Content script loaded on', window.location.href);
 
 function onPortMessageHandler (data: Message['data']): void {
   window.postMessage({ ...data, origin: MESSAGE_ORIGIN_CONTENT }, '*');
@@ -32,9 +33,6 @@ window.addEventListener('message', ({ data, source }: Message): void => {
     return;
   }
 
-  console.log(`[c]trying to replace links`);
-  replaceLinksInTextNodes(document.body);
-
   ensurePortConnection(port, portConfig).then((connectedPort) => {
     connectedPort.postMessage(data);
     port = connectedPort;
@@ -53,23 +51,34 @@ script.onload = (): void => {
   }
 };
 
-/*
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", replaceLinksInTextNodes(document.body));
-} else {
-*/
-replaceLinksInTextNodes(document.body);
-//}
-// Set up a MutationObserver to handle dynamically loaded content
-const observer = new MutationObserver(mutations => {
-  mutations.forEach(mutation => {
-    mutation.addedNodes.forEach(node => {
-      replaceLinksInTextNodes(node);
+
+
+// Function to initialize link replacement
+function initializeLinkReplacement() {
+  console.log('Initializing link replacement');
+
+  replaceLinksInAnchors(document.body);
+
+  // Set up MutationObserver to handle dynamically added content
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        replaceLinksInAnchors(node);
+      });
     });
   });
-});
 
-// Observe changes in the entire document body
-observer.observe(document.body, { childList: true, subtree: true });
+  observer.observe(document.body, { childList: true, subtree: true });
+}
 
-(document.head || document.documentElement).appendChild(script);
+// Wait for the DOM to be fully loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM fully loaded and parsed');
+    initializeLinkReplacement();
+  });
+} else {
+  // DOM is already loaded
+  console.log('DOM already loaded');
+  initializeLinkReplacement();
+}

@@ -33,3 +33,5 @@ packages/extension/manifest.json
 
 # Diff script generates ff-diff
 ff-diff
+
+blinks-app
