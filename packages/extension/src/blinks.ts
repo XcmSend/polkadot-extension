@@ -40,24 +40,7 @@ export function replaceLinksInAnchors(node: Node): void {
         }
 
         processedLinksCache.add(linkText);
-
         console.log('Processing blink link:', linkText);
-
-         // Create a container div
-         const container = document.createElement('div');
-         container.className = 'my-react-app-container'; // Add a class for styling if needed
- 
-        //  // Load the Vite app
-        //  loadViteApp(container);
- 
-        //  // Replace the link element with the container
-        //  if (element.parentNode) {
-        //    element.parentNode.replaceChild(container, element);
-        //  } else {
-        //    console.warn('Element has no parent node:', element);
-        //  }
- 
-        //  return; 
 
         const iframeSrc = createIframeSrc(linkText);
 
@@ -65,18 +48,34 @@ export function replaceLinksInAnchors(node: Node): void {
           // Create the iframe element
           const iframe = document.createElement('iframe');
           iframe.src = iframeSrc;
-          iframe.width = '100%';
-          iframe.height = '100%';
+          iframe.width = '100%'; 
           iframe.style.border = 'none';
-          // we want iframe minHeight to be 500px
-          iframe.style.minHeight = '700px';
-          // // we want to grab specific elements from the iframe
-          // iframe.onload = function() {
-          //    const iframeDoc = iframe.contentDocument;
-          //    const iframeBody = iframeDoc.body;
-          //     const iframeTitle = iframeDoc.title;
+          iframe.style.borderRadius = '15px';
+          iframe.style.backgroundColor = 'black';
+          iframe.style.minHeight = '500px'; // Set a minimum height initially
 
+          // Dynamically adjust the iframe height based on the content of .blinkMiniAppContainer
+          iframe.onload = function() {
+            try {
+              const iframeWindow = iframe.contentWindow;
+              const iframeDoc = iframeWindow ? iframeWindow.document : null;              
+ if (iframeDoc) {
+      const blinkMiniAppContainer = iframeDoc.querySelector('.blinkMiniAppContainer');
 
+              if (blinkMiniAppContainer) {
+                const containerHeight = blinkMiniAppContainer.scrollHeight;
+                iframe.style.height = containerHeight + 'px'; // Adjust height dynamically
+                console.log('Adjusted iframe height to:', containerHeight + 'px');
+              } else {
+                console.warn('No .blinkMiniAppContainer found in the iframe.');
+              }
+            } else {
+              console.error('iframe.contentDocument or contentWindow is null.');
+            }
+            } catch (error) {
+              console.error('Error accessing iframe content:', error);
+            }
+          };
 
           console.log('Replacing link with iframe:', iframeSrc);
 
@@ -96,6 +95,7 @@ export function replaceLinksInAnchors(node: Node): void {
     }
   }
 }
+
 
 function getFullTextContent(element: HTMLElement): string {
   let text = '';
@@ -238,9 +238,12 @@ export function replaceLinksInTextNodes(node: Node) {
             // Create the iFrame element
             const iframe = document.createElement('iframe');
             iframe.src = iframeSrc;
-            iframe.width = '100%'; // Adjust as needed
-            iframe.height = '500px'; // Adjust as needed
+            iframe.width = '100%'; 
+            iframe.height = '400px';
             iframe.style.border = 'none';
+            iframe.style.borderRadius = '15px';
+            iframe.style.backgroundColor = 'black';
+
           
             fragment.appendChild(iframe);
           } else {
@@ -273,7 +276,7 @@ console.log('createIframeSrc called');
   if (parsedLink) {
     console.log('Using Parsed link:', parsedLink);
     const { chain, blockNumber, txIndex } = parsedLink;
-  return `https://blink.bagpipes.io/#/${chain}:${blockNumber}:${txIndex}`;
+  return `http://localhost:5173/#/post/${chain}:${blockNumber}:${txIndex}?miniAppView=true`;
   } else {
     console.log('Error parsing link');
     return null;
