@@ -15,7 +15,6 @@ import { AccountsStore } from '@polkadot/extension-base/stores';
 import { keyring } from '@polkadot/ui-keyring';
 import { assert } from '@polkadot/util';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
-import { replaceLinksInTextNodes } from './blinks';
 
 
 
@@ -69,7 +68,6 @@ chrome.runtime.onMessage.addListener((message: { type: string }, _, sendResponse
   
   console.log(`replace links in node`);
   // inject linker 
-  replaceLinksInTextNodes(document.body);
 
 
   if (message.type === 'wakeup') {

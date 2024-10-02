@@ -1,23 +1,23 @@
 {
-  "author": "Jaco Greeff <jacogr@gmail.com>",
-  "bugs": "https://github.com/polkadot-js/extension/issues",
+  "author": "Decentration",
+  "bugs": "https://github.com/decentration/beetle/issues",
   "engines": {
     "node": ">=18.14"
   },
-  "homepage": "https://github.com/polkadot-js/extension#readme",
+  "homepage": "https://github.com/decentration/beetle#readme",
   "license": "Apache-2.0",
   "packageManager": "yarn@4.4.0",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/polkadot-js/extension.git"
+    "url": "https://github.com/decentration/beetle.git"
   },
   "sideEffects": false,
   "type": "module",
-  "version": "0.52.3",
+  "version": "0.1.3",
   "versions": {
-    "git": "0.52.3",
-    "npm": "0.52.3"
+    "git": "0.1.3",
+    "npm": "0.1.3"
   },
   "workspaces": [
     "packages/*"

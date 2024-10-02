@@ -9,7 +9,7 @@ import BaseStore from './Base.js';
 export default class MetadataStore extends BaseStore<MetadataDef> {
   constructor () {
     super(
-      EXTENSION_PREFIX && EXTENSION_PREFIX !== 'polkadot{.js}'
+      EXTENSION_PREFIX && EXTENSION_PREFIX !== 'Beetle Web3'
         ? `${EXTENSION_PREFIX}metadata`
         : 'metadata'
     );

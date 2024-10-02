@@ -9,7 +9,7 @@ import BaseStore from './Base.js';
 export default class AccountsStore extends BaseStore<KeyringJson> implements KeyringStore {
   constructor () {
     super(
-      EXTENSION_PREFIX && EXTENSION_PREFIX !== 'polkadot{.js}'
+      EXTENSION_PREFIX && EXTENSION_PREFIX !== 'Beetle Web3'
         ? `${EXTENSION_PREFIX}accounts`
         : null
     );

@@ -1,17 +1,17 @@
 {
   "author": "Jaco Greeff <jacogr@gmail.com>",
-  "bugs": "https://github.com/polkadot-js/extension/issues",
+  "bugs": "https://github.com/decentration/beetle/issues",
   "description": "Metamask compatibility layer",
   "engines": {
     "node": ">=18"
   },
-  "homepage": "https://github.com/polkadot-js/extension/tree/master/packages/extension-compat-metamask#readme",
+  "homepage": "https://github.com/decentration/beetle/tree/master/packages/extension-compat-metamask#readme",
   "license": "Apache-2.0",
   "name": "@polkadot/extension-compat-metamask",
   "repository": {
     "directory": "packages/extension-compat-metamask",
     "type": "git",
-    "url": "https://github.com/polkadot-js/extension.git"
+    "url": "https://github.com/decentration/beetle.git"
   },
   "sideEffects": [
     "./packageDetect.js",

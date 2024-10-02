@@ -1,17 +1,17 @@
 {
   "author": "Jaco Greeff <jacogr@gmail.com>",
-  "bugs": "https://github.com/polkadot-js/extension/issues",
+  "bugs": "https://github.com/decentration/beetle/issues",
   "description": "A generic injector (usable to any extension), that populates the base exposed interfaces to be used by dapps.",
   "engines": {
     "node": ">=18"
   },
-  "homepage": "https://github.com/polkadot-js/extension/tree/master/packages/extension-inject#readme",
+  "homepage": "https://github.com/decentration/beetle/tree/master/packages/extension-inject#readme",
   "license": "Apache-2.0",
   "name": "@polkadot/extension-inject",
   "repository": {
     "directory": "packages/extension-inject",
     "type": "git",
-    "url": "https://github.com/polkadot-js/extension.git"
+    "url": "https://github.com/decentration/beetle.git"
   },
   "sideEffects": true,
   "type": "module",

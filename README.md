@@ -35,7 +35,7 @@ https://github.com/XcmSend/polkadot-extension/issues/5
   -  Firefox precompiled browser extension: https://github.com/XcmSend/polkadot-extension/issues/5#issuecomment-2338117887  
 
 
-# polkadot{.js} extension
+# Beetle Web3 extension
 
 A very simple scaffolding browser extension that injects a [@polkadot/api](https://github.com/polkadot-js/api) Signer into a page, along with any associated accounts, allowing for use by any dapp. This is an extensible POC implementation of a Polkadot/Substrate browser signer.
 

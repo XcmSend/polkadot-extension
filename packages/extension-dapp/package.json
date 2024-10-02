@@ -1,17 +1,17 @@
 {
   "author": "Jaco Greeff <jacogr@gmail.com>",
-  "bugs": "https://github.com/polkadot-js/extension/issues",
+  "bugs": "https://github.com/decentration/beetle/issues",
   "description": "Provides an interfaces around the injected globals for ease of access by dapp developers.",
   "engines": {
     "node": ">=18"
   },
-  "homepage": "https://github.com/polkadot-js/extension/tree/master/packages/extension-dapp#readme",
+  "homepage": "https://github.com/decentration/beetle/tree/master/packages/extension-dapp#readme",
   "license": "Apache-2.0",
   "name": "@polkadot/extension-dapp",
   "repository": {
     "directory": "packages/extension-dapp",
     "type": "git",
-    "url": "https://github.com/polkadot-js/extension.git"
+    "url": "https://github.com/decentration/beetle.git"
   },
   "sideEffects": [
     "./packageDetect.js",

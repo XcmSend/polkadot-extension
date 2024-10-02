@@ -1,17 +1,6 @@
 // Copyright 2019-2024 @polkadot/extension authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { html_base } from './parse_links';
-
-// THE LINK REGEX
-const regexPattern2 = /polkadotlink:\/\/[A-Za-z0-9]{46}/g; // Note the 'g' flag for global matching
-
-//var regex_links = "polkadotlink\:\/\/[A-Z-a-z-0-9]{46}"
-
-// import { chrome } from '@polkadot/extension-inject/chrome';
-/// polkadotlink://QmPLVqWgEoNBjyTPBKw5prq6uuU1id2Wr39QWmpmyafEpF ipfs test
-// $ polkadotlink://QmRUxiaLQj8MtZeM6uiLiRMR3fyLeFcMzSrCq8NGtPPzZW
-
 
 const blinkLinkPattern = /(https?:\/\/)?(www\.)?blink\.bagpipes\.io\/#\/[a-z]+:[0-9]+:[0-9]+/i;
 const processedLinksCache = new Set();
@@ -48,19 +37,65 @@ export function replaceLinksInAnchors(node: Node): void {
           // Create the iframe element
           const iframe = document.createElement('iframe');
           iframe.src = iframeSrc;
-          iframe.width = '100%'; 
+          // iframe.width = '700px'; 
           iframe.style.border = 'none';
           iframe.style.borderRadius = '15px';
           iframe.style.backgroundColor = 'black';
-          iframe.style.minHeight = '500px'; // Set a minimum height initially
+          iframe.style.minHeight = '600px'; 
+          iframe.style.minWidth = '600px'; 
+          // lets allow overflow scroll Y axis
+          iframe.style.overflowY = 'scroll';
+          iframe.style.overflowX = 'scroll';
+          iframe.setAttribute('allow', 'clipboard-write');
+          iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-forms');
+
+          // iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+
+          // Function to handle iframe postMessage
+          const sendMessageToIframe = () => {
+            if (iframe.contentWindow) {
+              iframe.contentWindow.postMessage(
+                { type: 'TEST_RESPONSE', payload: 'Hello from Parent' },
+                'http://localhost:5173' || 'https://blink.bagpipes.io' || 'https://x.com'
+              );
+            } else {
+              console.warn('iframe.contentWindow is not available, retrying...');
+              setTimeout(sendMessageToIframe, 100); // Retry after 100ms if contentWindow is not ready
+            }
+          };
+
+          // Listen for messages from the iframe
+          window.addEventListener('message', (event) => {
+            if (event.origin !== 'http://localhost:5173' || 'https://blink.bagpipes.io'  || 'https://x.com') {
+              console.warn(`Ignored message from origin: ${event.origin}`);
+              return;
+            }
+          
+            const { type, payload } = event.data;
+            console.log('Received message from iframe:', type, payload);
+
+            switch (type) {
+              case 'WALLET_CONNECT_RESPONSE':
+                console.log('Handling wallet connect response:', payload);
+                break;
+              
+              case 'TEST_MESSAGE':
+                console.log('Test message received from iframe:', payload);
+                sendMessageToIframe();  // Safely send a message back to iframe
+                break;
+
+              default:
+                console.warn('Unhandled message type:', type);
+            }
+          });
 
           // Dynamically adjust the iframe height based on the content of .blinkMiniAppContainer
           iframe.onload = function() {
             try {
               const iframeWindow = iframe.contentWindow;
               const iframeDoc = iframeWindow ? iframeWindow.document : null;              
- if (iframeDoc) {
-      const blinkMiniAppContainer = iframeDoc.querySelector('.blinkMiniAppContainer');
+              if (iframeDoc) {
+                    const blinkMiniAppContainer = iframeDoc.querySelector('.blinkMiniAppContainer');
 
               if (blinkMiniAppContainer) {
                 const containerHeight = blinkMiniAppContainer.scrollHeight;
@@ -95,6 +130,8 @@ export function replaceLinksInAnchors(node: Node): void {
     }
   }
 }
+
+
 
 
 function getFullTextContent(element: HTMLElement): string {
@@ -175,99 +212,7 @@ function loadViteApp(container: HTMLElement) {
     .catch(error => console.error('Failed to load Vite app:', error));
 }
 
-// Function to inject WASM files
-function injectWasmFiles() {
-  const wasmFiles = [
-    'hydra_dx_wasm_bg-BPeGNIMQ.wasm',
-    'hydra_dx_wasm_bg-Dc7IKe9x.wasm',
-    'hydra_dx_wasm_bg-Do9STVnj.wasm',
-    'hydra_dx_wasm_bg-Dp6tEp4Y.wasm',
-    'hydra_dx_wasm_bg-oxJqfi97.wasm',
-  ];
 
-  wasmFiles.forEach(wasmFile => {
-    // Use fetch to ensure we can access the WASM file
-    fetch(chrome.runtime.getURL(`blinks-app/assets/${wasmFile}`))
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to load WASM file: ${wasmFile}`);
-        }
-        console.log(`WASM file ${wasmFile} loaded successfully`);
-      })
-      .catch(error => console.error('Error loading WASM file:', error));
-  });
-}
-
-
-export function replaceLinksInTextNodes(node: Node) {
-  console.log(`replaceLinksInTextNodes called`);
-  console.log(`node type is: `, node.nodeType);
-  console.log(`node object: `, node);
-  console.log(`node text object: `, node?.textContent);
-
-  if (node.nodeType === Node.TEXT_NODE) {
-    const textNode = node;
-    const parentNode = textNode.parentNode;
-
-    if (parentNode && textNode.textContent) {
-      const matches = textNode.textContent.match(blinkLinkPattern);
-
-      if (matches) {
-        const fragment = document.createDocumentFragment();
-        let lastIndex = 0;
-
-        matches.forEach((match) => {
-          if (processedLinksCache.has(match)) {
-            return;
-          }
-
-          processedLinksCache.add(match);
-
-          const textContent = textNode.textContent!; 
-          const index = textContent.indexOf(match, lastIndex);
-          const beforeText = textContent.substring(lastIndex, index);
-
-          if (beforeText) {
-            fragment.appendChild(document.createTextNode(beforeText));
-          }
-
-          // iFrmae
-          const iframeSrc = createIframeSrc(match);
-
-          if (iframeSrc !== null) {
-            // Create the iFrame element
-            const iframe = document.createElement('iframe');
-            iframe.src = iframeSrc;
-            iframe.width = '100%'; 
-            iframe.height = '400px';
-            iframe.style.border = 'none';
-            iframe.style.borderRadius = '15px';
-            iframe.style.backgroundColor = 'black';
-
-          
-            fragment.appendChild(iframe);
-          } else {
-            // If parsing failed, just append the original text
-            fragment.appendChild(document.createTextNode(match));
-          }
-          
-          lastIndex = index + match.length;
-        });
-
-        // Append remaining text after the last match
-        const remainingText = textNode.textContent.substring(lastIndex);
-        if (remainingText) {
-          fragment.appendChild(document.createTextNode(remainingText));
-        }
-
-        // Replace the original text node with the new fragment
-        parentNode.replaceChild(fragment, textNode);
-      }
-    }
-  } else if (node.nodeType === Node.ELEMENT_NODE) {
-    node.childNodes.forEach(replaceLinksInTextNodes);
-  }
-}
 
 function createIframeSrc(link: string): string | null {
   // Parse the link to extract parameters
@@ -276,7 +221,7 @@ console.log('createIframeSrc called');
   if (parsedLink) {
     console.log('Using Parsed link:', parsedLink);
     const { chain, blockNumber, txIndex } = parsedLink;
-  return `http://localhost:5173/#/post/${chain}:${blockNumber}:${txIndex}?miniAppView=true`;
+  return `https://blink.bagpipes.io/#/post/${chain}:${blockNumber}:${txIndex}?miniAppView=true`;
   } else {
     console.log('Error parsing link');
     return null;
@@ -308,4 +253,31 @@ function parseBlinkLink(link: string): ParsedLink | null {
     console.error('Error parsing link:', e);
     return null;
   }
+}
+
+
+
+
+
+// Function to inject WASM files
+function injectWasmFiles() {
+  const wasmFiles = [
+    'hydra_dx_wasm_bg-BPeGNIMQ.wasm',
+    'hydra_dx_wasm_bg-Dc7IKe9x.wasm',
+    'hydra_dx_wasm_bg-Do9STVnj.wasm',
+    'hydra_dx_wasm_bg-Dp6tEp4Y.wasm',
+    'hydra_dx_wasm_bg-oxJqfi97.wasm',
+  ];
+
+  wasmFiles.forEach(wasmFile => {
+    // Use fetch to ensure we can access the WASM file
+    fetch(chrome.runtime.getURL(`blinks-app/assets/${wasmFile}`))
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to load WASM file: ${wasmFile}`);
+        }
+        console.log(`WASM file ${wasmFile} loaded successfully`);
+      })
+      .catch(error => console.error('Error loading WASM file:', error));
+  });
 }

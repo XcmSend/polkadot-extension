@@ -10,7 +10,8 @@ import { replaceLinksInAnchors } from './blinks';
 
 
 let port: chrome.runtime.Port | undefined;
-console.log('Content script loaded on', window.location.href);
+console.log('Beetle Web3 Extension Content Script Injected on:', window.location.href);
+
 
 function onPortMessageHandler (data: Message['data']): void {
   window.postMessage({ ...data, origin: MESSAGE_ORIGIN_CONTENT }, '*');
@@ -26,6 +27,24 @@ const portConfig = {
   portName: PORT_CONTENT
 };
 
+
+// window.addEventListener('message', async (event) => {
+//   if (event.source !== window) return;
+
+//   const { type } = event.data;
+//   if (type === 'GET_ACCOUNTS') {
+//     // Use window.injectedWeb3 to get accounts
+//     const accounts = await getAccountsFromInjectedWeb3();
+//     event.source.postMessage({ type: 'ACCOUNTS', payload: { accounts } }, '*');
+//   }
+// });
+
+// async function getAccountsFromInjectedWeb3() {
+//   const extensions = await web3Enable('Your App');
+//   const allAccounts = await web3Accounts();
+//   return allAccounts;
+// }
+
 // all messages from the page, pass them to the extension
 window.addEventListener('message', ({ data, source }: Message): void => {
   // only allow messages from our window, by the inject
@@ -33,6 +52,8 @@ window.addEventListener('message', ({ data, source }: Message): void => {
     return;
   }
 
+
+  
   ensurePortConnection(port, portConfig).then((connectedPort) => {
     connectedPort.postMessage(data);
     port = connectedPort;
@@ -50,6 +71,15 @@ script.onload = (): void => {
     script.parentNode.removeChild(script);
   }
 };
+
+// Listen for messages from the extension and relay to the page
+chrome.runtime.onConnect.addListener((connectedPort) => {
+  connectedPort.onMessage.addListener((message) => {
+    window.postMessage({ ...message, origin: MESSAGE_ORIGIN_CONTENT }, '*');
+  });
+
+  connectedPort.onDisconnect.addListener(onPortDisconnectHandler);
+});
 
 
 
